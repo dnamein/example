@@ -32,14 +32,30 @@ var app = {
 					} else {
 						alert('window.cordova NOT available');
 					}
-			}, false);
-			document.addEventListener("deviceready", function () {
+
 				if (window.cordova && window.cordova.plugins) {
 					alert('window.cordova.plugins is available');
 				} else {
-					alert('window.cordova.plugins NOT available');
+					alert(window.cordova.plugins);
 				}
-		
+				window.plugins.BarcodeScanner.scan(
+				  function (result) {
+					  alert("We got a barcode\n" +
+							"Result: " + result.text + "\n" +
+							"Format: " + result.format + "\n" +
+							"Cancelled: " + result.cancelled);
+				  }, 
+				  function (error) {
+					  alert("Scanning failed: " + error);
+				  },
+				  {
+					  "preferFrontCamera" : true, // iOS and Android
+					  "showFlipCameraButton" : true, // iOS and Android
+					  "prompt" : "Place a barcode inside the scan area", // supported on Android only
+					  "formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+					  "orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
+				  }
+			   );
 			}, false);
 			
     },
@@ -70,24 +86,7 @@ var app = {
     }
 };
 function skanuj() {
-	console.log('scanning');
-  cordova.plugins.barcodeScanner.scan(
-      function (result) {
-          alert("We got a barcode\n" +
-                "Result: " + result.text + "\n" +
-                "Format: " + result.format + "\n" +
-                "Cancelled: " + result.cancelled);
-      }, 
-      function (error) {
-          alert("Scanning failed: " + error);
-      },
-      {
-          "preferFrontCamera" : true, // iOS and Android
-          "showFlipCameraButton" : true, // iOS and Android
-          "prompt" : "Place a barcode inside the scan area", // supported on Android only
-          "formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-          "orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
-      }
-   );
+	console.log(plugins.barcodeScanner);
+
 }
 app.initialize();
